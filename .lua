@@ -1,10 +1,8 @@
--- Auto Select Team (ใช้ได้กับหลาย executor)
-
 repeat task.wait() until game:IsLoaded()
 
-local team = "Pirates" -- เปลี่ยนเป็น "Marines"
+local team = "Marines"
 
-local function SetTeam()
+local function trySet()
     pcall(function()
         game:GetService("ReplicatedStorage")
             :WaitForChild("Remotes")
@@ -13,8 +11,13 @@ local function SetTeam()
     end)
 end
 
--- ยิงซ้ำหลายครั้ง กันไม่ติด
-for i = 1, 10 do
-    task.wait(0.5)
-    SetTeam()
+-- ยิงถี่ + หลายรอบ
+for i = 1, 20 do
+    task.wait(0.2)
+    trySet()
 end
+
+-- รีตัวช่วยอีกแรง
+pcall(function()
+    game.Players.LocalPlayer.Character:BreakJoints()
+end)
