@@ -1,29 +1,20 @@
--- Auto Click GUI เลือกทีม
+-- Auto Select Team (ใช้ได้กับหลาย executor)
+
 repeat task.wait() until game:IsLoaded()
 
-local player = game.Players.LocalPlayer
-local gui = player.PlayerGui
+local team = "Pirates" -- เปลี่ยนเป็น "Marines"
 
-repeat task.wait() until gui:FindFirstChild("Main")
+local function SetTeam()
+    pcall(function()
+        game:GetService("ReplicatedStorage")
+            :WaitForChild("Remotes")
+            :WaitForChild("CommF_")
+            :InvokeServer("SetTeam", team)
+    end)
+end
 
-local main = gui.Main
-
-if main:FindFirstChild("ChooseTeam") then
-    local choose = main.ChooseTeam
-
-    -- เลือก Pirate
-    for _,v in pairs(choose:GetDescendants()) do
-        if v.Name == "Pirates" and v:IsA("TextButton") then
-            firesignal(v.MouseButton1Click)
-        end
-    end
-
-    -- เลือก Marine (ถ้าจะใช้ เปลี่ยนเป็น Marines)
-    --[[ 
-    for _,v in pairs(choose:GetDescendants()) do
-        if v.Name == "Marines" and v:IsA("TextButton") then
-            firesignal(v.MouseButton1Click)
-        end
-    end
-    ]]
+-- ยิงซ้ำหลายครั้ง กันไม่ติด
+for i = 1, 10 do
+    task.wait(0.5)
+    SetTeam()
 end
