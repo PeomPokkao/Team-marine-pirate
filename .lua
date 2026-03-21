@@ -1,27 +1,29 @@
--- Auto Select Team (Pirate / Marine)
-
-local Team = "Marine" -- เปลี่ยนเป็น "Marine" ได้
-
+-- Auto Click GUI เลือกทีม
 repeat task.wait() until game:IsLoaded()
 
--- กันพลาด: รอ GUI โหลด
-repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+local player = game.Players.LocalPlayer
+local gui = player.PlayerGui
 
--- ฟังก์ชันเลือกทีม
-local function ChooseTeam()
-    local args = {
-        [1] = Team
-    }
+repeat task.wait() until gui:FindFirstChild("Main")
 
-    game:GetService("ReplicatedStorage")
-        :WaitForChild("Remotes")
-        :WaitForChild("CommF_")
-        :InvokeServer("SetTeam", Team)
+local main = gui.Main
+
+if main:FindFirstChild("ChooseTeam") then
+    local choose = main.ChooseTeam
+
+    -- เลือก Pirate
+    for _,v in pairs(choose:GetDescendants()) do
+        if v.Name == "Pirates" and v:IsA("TextButton") then
+            firesignal(v.MouseButton1Click)
+        end
+    end
+
+    -- เลือก Marine (ถ้าจะใช้ เปลี่ยนเป็น Marines)
+    --[[ 
+    for _,v in pairs(choose:GetDescendants()) do
+        if v.Name == "Marines" and v:IsA("TextButton") then
+            firesignal(v.MouseButton1Click)
+        end
+    end
+    ]]
 end
-
--- รัน
-pcall(function()
-    ChooseTeam()
-end)
-
-print("Selected Team:", Team)
