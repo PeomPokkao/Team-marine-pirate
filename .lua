@@ -1,23 +1,28 @@
 repeat task.wait() until game:IsLoaded()
 
-local team = "Marines"
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
-local function trySet()
+local function SetMarine()
     pcall(function()
         game:GetService("ReplicatedStorage")
             :WaitForChild("Remotes")
             :WaitForChild("CommF_")
-            :InvokeServer("SetTeam", team)
+            :InvokeServer("SetTeam", "Marines")
     end)
 end
 
--- ยิงถี่ + หลายรอบ
-for i = 1, 20 do
+-- ยิงรัวช่วงแรก (สำคัญมาก)
+for i = 1, 30 do
     task.wait(0.2)
-    trySet()
+    SetMarine()
 end
 
--- รีตัวช่วยอีกแรง
-pcall(function()
-    game.Players.LocalPlayer.Character:BreakJoints()
+-- เช็ค ถ้ายังไม่ใช่ Marine ให้ยิงซ้ำ
+task.spawn(function()
+    while task.wait(1) do
+        if player.Team and player.Team.Name ~= "Marines" then
+            SetMarine()
+        end
+    end
 end)
